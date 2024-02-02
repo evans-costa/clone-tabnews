@@ -9,13 +9,13 @@ async function status(request, response) {
 
   const databaseName = process.env.POSTGRES_DB;
   const databaseOpenedConnections = await database.query({
-    text: "SELECT COUNT(*)::INTEGER AS opened_connections FROM pg_stat_activity WHERE datname = $1;",
+    text: "SELECT COUNT(*)::INTEGER FROM pg_stat_activity WHERE datname = $1;",
     values: [databaseName],
   });
 
   const results = {
     max_connections: parseInt(databaseMaxConnections.rows[0].max_connections),
-    opened_connections: databaseOpenedConnections.rows[0].opened_connections,
+    opened_connections: databaseOpenedConnections.rows[0].count,
     version: databaseVersion.rows[0].server_version,
   };
 
